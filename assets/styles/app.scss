@@ -1,0 +1,13 @@
+@import "~bootstrap/scss/bootstrap";
+
+$primary: #DCB671;
+$danger: #474A4F;
+
+$theme-colors: (
+        "primary": $primary,
+        "danger": $danger
+);
+
+body {
+    background-color: whitesmoke;
+}
