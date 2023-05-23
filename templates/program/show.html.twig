@@ -2,5 +2,13 @@
 {% block title %}Wild Series{% endblock %}
 
 {% block body %}
-    <h1>Program {{ id }}</h1>
+    <div class="media">
+        <img class="align-self-start mr-3" src="{{ asset('build/images/' ~ program.poster ~ '.jpg') }}" alt="{{ program.title }} poster">
+        {{ dump(program.poster) }}
+        <div class="media-body">
+            <h1 class="mt-0">{{ program.title }}</h1>
+            <p>{{ program.synopsis }}</p>
+            <p>Catégorie : {{ program.category.name }}</p>
+        </div>
+    </div>
 {% endblock %}
