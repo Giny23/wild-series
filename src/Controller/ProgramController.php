@@ -2,10 +2,14 @@
 
 namespace App\Controller;
 
+use App\Entity\Category;
 use App\Entity\Program;
 use App\Entity\Season;
+use App\Form\CategoryType;
+use App\Form\ProgramType;
 use App\Repository\SeasonRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Repository\ProgramRepository;
@@ -19,6 +23,22 @@ class ProgramController extends AbstractController
         $programs = $programRepository->findAll();
         return $this->render('program/index.html.twig', [
             'programs' => $programs,
+        ]);
+    }
+    #[Route('/new', methods: ['GET', 'POST'], name: 'new')]
+    public function new(Request $request, ProgramRepository $programRepository): Response
+    {
+        $program = new Program();
+        $form = $this->createForm(ProgramType::class, $program);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted()) {
+            $programRepository->save($program, true);
+            return $this->redirectToRoute('program_index');
+        }
+
+        return $this->render('program/new.html.twig', [
+            'form' => $form,
         ]);
     }
     #[Route('/{id<\d+>}', methods: ['GET'], name: 'show')]
@@ -54,23 +74,13 @@ class ProgramController extends AbstractController
         ]);
     }
 
-
-
-
-
     /* a configurer dans les prochaines quêtes
-    #[Route('/new', methods: ['GET', 'POST'], name: 'new')]
-    public function new(): Response
-    {
-        return $this->render('program/index.html.twig.twig', [
-            'website' => 'Wild Series',
-        ]);
-    }
-    #[Route('/{id<\d+>}', methods: ['DELETE'], name: 'delete')]
-    public function new(): Response
-    {
-        return $this->render('program/index.html.twig.twig', [
-            'website' => 'Wild Series',
-        ]);
-    } */
+
+#[Route('/{id<\d+>}', methods: ['DELETE'], name: 'delete')]
+public function new(): Response
+{
+    return $this->render('program/index.html.twig.twig', [
+        'website' => 'Wild Series',
+    ]);
+} */
 }
