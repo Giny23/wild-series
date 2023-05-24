@@ -4,11 +4,16 @@
 {% block body %}
     <div class="media">
         <img class="align-self-start mr-3" src="{{ asset('build/images/' ~ program.poster ~ '.jpg') }}" alt="{{ program.title }} poster">
-        {{ dump(program.poster) }}
         <div class="media-body">
             <h1 class="mt-0">{{ program.title }}</h1>
             <p>{{ program.synopsis }}</p>
             <p>Catégorie : {{ program.category.name }}</p>
+            <p>Saisons disponibles :</p>
+            {% for season in seasons %}
+                <a href="{{ path('program_showSeason', { 'seasonId': season.id , 'programId': program.id }) }}">{{ season.number }}</a>
+            {% else %}
+                <p>Aucune saison disponible</p>
+            {% endfor %}
         </div>
     </div>
 {% endblock %}

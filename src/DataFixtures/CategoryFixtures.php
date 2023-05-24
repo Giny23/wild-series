@@ -11,10 +11,9 @@ class CategoryFixtures extends Fixture
     const CATEGORIES = [
         'Horreur',
         'Action',
-        'Aventure',
-        'Comédie',
-        'Fantastique',
-        'Science-fiction',
+        'Romance',
+        'Comedie',
+        'Sciencefiction',
     ];
 
     /**
