@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\Program;
 use App\Repository\SeasonRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -20,9 +21,9 @@ class ProgramController extends AbstractController
         ]);
     }
     #[Route('/{id<\d+>}', methods: ['GET'], name: 'show')]
-    public function show(ProgramRepository $programRepository, int $id): Response
+    public function show(Program $program): Response
     {
-        $program = $programRepository->findOneBy(['id' => $id]);
+        //$program = $programRepository->findOneBy(['id' => $id]);
         $seasons = $program->getSeasons();
 
         if (!$program) {
