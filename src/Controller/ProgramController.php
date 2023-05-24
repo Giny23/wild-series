@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Program;
+use App\Entity\Season;
 use App\Repository\SeasonRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -36,17 +37,26 @@ class ProgramController extends AbstractController
             'program' => $program, 'seasons' => $seasons
         ]);
     }
-    #[Route('/{programId<\d+>}/seasons/{seasonId<\d+>}', methods: ['GET'], name: 'showSeason')]
-
-    public function showSeason(int $programId, int $seasonId, ProgramRepository $programRepository, SeasonRepository $seasonRepository) : Response
+    #[Route('/{program<\d+>}/season/{season<\d+>}', methods: ['GET'], name: 'showSeason')]
+    public function showSeason(Program $program, Season $season) : Response
     {
-        $program = $programRepository->findOneBy(['id' => $programId]);
-        $season = $seasonRepository->findOneBy(['id' => $seasonId]);
         $episodes = $season->getEpisodes();
         return $this->render('program/season_show.html.twig', [
             'program' => $program, 'season' => $season, 'episodes' => $episodes
         ]);
     }
+
+    #[Route('/{program<\d+>}/season/{season<\d+>}/episode/{episode<\d+>}', methods: ['GET'], name: 'showEpisode')]
+    public function showEpisode(Program $program, Season $season, Episode $episode)
+    {
+        return $this->render('program/episode_show.html.twig', [
+            'program' => $program, 'season' => $season, 'episode' => $episode
+        ]);
+    }
+
+
+
+
 
     /* a configurer dans les prochaines quêtes
     #[Route('/new', methods: ['GET', 'POST'], name: 'new')]

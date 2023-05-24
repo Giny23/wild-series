@@ -10,7 +10,8 @@
             <p>Catégorie : {{ program.category.name }}</p>
             <p>Saisons disponibles :</p>
             {% for season in seasons %}
-                <a href="{{ path('program_showSeason', { 'seasonId': season.id , 'programId': program.id }) }}">{{ season.number }}</a>
+                <a href="{{ path('program_showSeason', { 'program': program.id , 'season': season.id }) }}">Saison : {{ season.number }}</a>
+                <br>
             {% else %}
                 <p>Aucune saison disponible</p>
             {% endfor %}
