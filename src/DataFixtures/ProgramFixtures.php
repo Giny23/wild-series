@@ -6,6 +6,8 @@ use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use App\Entity\Program;
+use Symfony\Component\String\Slugger\SluggerInterface;
+
 
 class ProgramFixtures extends Fixture implements DependentFixtureInterface
 {
@@ -18,6 +20,12 @@ Nous suivons les aventures du chasseur de primes isolé dans la bordure extérie
         ['Walking Dead', 'Le shérif Rick Grimes se réveille à l\'hopital après un long coma. Il découvre avec effarement que le monde, ravagé par une épidémie, est envahi par les morts-vivants.', 'Horreur', "walkingdead", '4' ],
         ["The Queen's Gambit", "Dans les années 1950, une jeune orpheline passionnée d\'échecs lutte contre ses addictions en intégrant une école spécialisée.", 'Action', "queensgambit", '5']
     ];
+    private SluggerInterface $slugger;
+
+    public function __construct(SluggerInterface $slugger)
+    {
+        $this->slugger = $slugger;
+    }
 
     public function load(ObjectManager $manager): void
     {
@@ -27,6 +35,7 @@ Nous suivons les aventures du chasseur de primes isolé dans la bordure extérie
                 $program->setSynopsis($programUnique[1]);
                 $program->setCategory($this->getReference('category_' . $programUnique[2]));
                 $program->setPoster($programUnique[3]);
+                $program->setSlug($this->slugger->slug($program->getTitle()));
                 $manager->persist($program);
                 /*$programId = $program->getId();*/
                 $programId = $programUnique[4];
@@ -35,6 +44,7 @@ Nous suivons les aventures du chasseur de primes isolé dans la bordure extérie
         }
         $manager->flush();
     }
+
     public function getDependencies()
     {
         return [
