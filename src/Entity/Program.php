@@ -20,7 +20,9 @@ class Program
     private ?int $id = null;
 
     #[ORM\Column(name: 'title', length: 255, unique: true)]
-    #[Assert\NotBlank]
+    #[Assert\NotBlank(
+        message: 'Le titre ne peut pas être vide',
+    )]
     #[Assert\Length(
         max: 255,
         maxMessage: 'Le titre saisi {{ value }} est trop long, il ne devrait pas dépasser {{ limit }} caractères',
@@ -28,7 +30,9 @@ class Program
     private ?string $title = null;
 
     #[ORM\Column(type: Types::TEXT)]
-    #[Assert\NotBlank]
+    #[Assert\NotBlank(
+        message: 'Le synopsis ne peut pas être vide',
+    )]
     #[Assert\Regex(
         pattern: '/plus belle la vie/',
         match: false,

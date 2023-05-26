@@ -1,4 +1,4 @@
-<nav class="navbar navbar-expand-lg navbar-light bg-light">
+<nav class="navbar navbar-expand-lg navbar-light">
     <div class="container-fluid">
         <a class="navbar-brand" href="/">Wild Séries</a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -32,6 +32,10 @@
                         <li><a class="dropdown-item" href="#">Actrices</a></li>
                         <li><hr class="dropdown-divider"></li>
                         <li><a class="dropdown-item" href="#">Tous les acteurs</a></li>
+                        <li><a class="dropdown-item" href="{{ path('program_new') }}">Ajouter une série</a></li>
+                        <li><a class="dropdown-item" href="{{ path('season_new') }}">Ajouter une saison</a></li>
+                        <li><a class="dropdown-item" href="{{ path('episode_new') }}">Ajouter un épisode</a></li>
+
                     </ul>
                 </li>
                 <li class="nav-item">

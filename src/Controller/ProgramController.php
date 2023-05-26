@@ -32,6 +32,7 @@ class ProgramController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $programRepository->save($program, true);
+            $this->addFlash('success', 'Nouvelle série ajoutée');
             return $this->redirectToRoute('program_index');
         }
 
@@ -71,6 +72,16 @@ class ProgramController extends AbstractController
             'program' => $program, 'season' => $season, 'episode' => $episode
         ]);
     }
+   /* #[Route('/{id}', name: 'delete', methods: ['POST'])]
+    public function delete(Request $request, Program $program, ProgramRepository $programRepository): Response
+    {
+        if ($this->isCsrfTokenValid('delete'.$program->getId(), $request->request->get('_token'))) {
+            $programRepository->remove($program, true);
+            $this->addFlash('danger', "La série a bien été supprimée");
+        }
+
+        return $this->redirectToRoute('program_index', [], Response::HTTP_SEE_OTHER);
+    }*/
 
     /* a configurer dans les prochaines quêtes
 
