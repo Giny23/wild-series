@@ -10,6 +10,8 @@ use App\Service\ProgramDuration;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Mailer\MailerInterface;
+use Symfony\Component\Mime\Email;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Repository\ProgramRepository;
 use Symfony\Component\String\Slugger\SluggerInterface;
@@ -26,7 +28,7 @@ class ProgramController extends AbstractController
         ]);
     }
     #[Route('/new', methods: ['GET', 'POST'], name: 'new')]
-    public function new(Request $request, ProgramRepository $programRepository, SluggerInterface $slugger): Response
+    public function new(Request $request, ProgramRepository $programRepository, SluggerInterface $slugger, MailerInterface $mailer): Response
     {
         $program = new Program();
         $form = $this->createForm(ProgramType::class, $program);
@@ -36,6 +38,13 @@ class ProgramController extends AbstractController
             $slug = $slugger->slug($program->getTitle());
             $program->setSlug($slug);
             $programRepository->save($program, true);
+            $email = (new Email())
+                ->from('expediteur@example.com')
+                ->to('destinataire@example.com')
+                ->subject('Une nouvelle série vient d\'être publiée !')
+                ->text('Sending emails is fun again!')
+                ->html('<p>Une nouvelle série vient d\'être publiée sur Wild Séries !</p>');
+            $mailer->send($email);
             $this->addFlash('success', 'Nouvelle série ajoutée');
             return $this->redirectToRoute('program_index');
         }
@@ -97,7 +106,7 @@ class ProgramController extends AbstractController
             'form' => $form,
         ]);
     }
-    #[Route('/{id}', name: 'delete', methods: ['POST, DELETE'])]
+    #[Route('/{slug}', name: 'delete', methods: ['POST'])]
     public function delete(Request $request, Program $program, ProgramRepository $programRepository): Response
     {
         if ($this->isCsrfTokenValid('delete'.$program->getId(), $request->request->get('_token'))) {

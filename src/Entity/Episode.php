@@ -27,7 +27,7 @@ class Episode
     private ?string $synopsis = null;
 
     #[ORM\Column]
-    private ?int $duration = null;
+    private ?int $duration = 0;
 
     #[ORM\Column(length: 255)]
     private ?string $slug = null;
