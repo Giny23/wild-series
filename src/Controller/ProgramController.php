@@ -43,7 +43,7 @@ class ProgramController extends AbstractController
                 ->to('destinataire@example.com')
                 ->subject('Une nouvelle série vient d\'être publiée !')
                 ->text('Sending emails is fun again!')
-                ->html('<p>Une nouvelle série vient d\'être publiée sur Wild Séries !</p>');
+                ->html($this->renderView('program/email.html.twig', ['program' => $program]));
             $mailer->send($email);
             $this->addFlash('success', 'Nouvelle série ajoutée');
             return $this->redirectToRoute('program_index');
@@ -58,8 +58,10 @@ class ProgramController extends AbstractController
     {
         //$program = $programRepository->findOneBy(['id' => $id]);
         $seasons = $program->getSeasons();
-        $programDuration = 0;
         $programDuration = $duration->calculate($program);
+        if (is_null($programDuration)) {
+            $programDuration = 0;
+        }
 
         if (!$program) {
             throw $this->createNotFoundException(
