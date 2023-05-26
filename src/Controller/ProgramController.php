@@ -42,7 +42,6 @@ class ProgramController extends AbstractController
                 ->from('expediteur@example.com')
                 ->to('destinataire@example.com')
                 ->subject('Une nouvelle série vient d\'être publiée !')
-                ->text('Sending emails is fun again!')
                 ->html($this->renderView('program/email.html.twig', ['program' => $program]));
             $mailer->send($email);
             $this->addFlash('success', 'Nouvelle série ajoutée');
