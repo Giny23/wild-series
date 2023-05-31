@@ -9,8 +9,11 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Validator\Constraints as Assert;
+use Vich\UploaderBundle\Mapping\Annotation as Vich;
+
 
 #[ORM\Entity(repositoryClass: ProgramRepository::class)]
+#[Vich\Uploadable]
 #[UniqueEntity('title', message: 'Ce titre existe déjà')]
 class Program
 {
@@ -43,6 +46,9 @@ class Program
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $poster = null;
 
+    #[Vich\UploadableField(mapping: 'poster_file', fileNameProperty: 'poster')]
+    private ?File $posterFile = null;
+
     #[ORM\ManyToOne(inversedBy:'programs')]
     #[ORM\JoinColumn(nullable: false)]
     private ?Category $category = null;
@@ -62,6 +68,9 @@ class Program
     #[ORM\Column(length: 255)]
     private ?string $slug = null;
 
+    #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
+    private ?DatetimeInterface $updatedAt = null;
+
     public function __construct()
     {
         $this->seasons = new ArrayCollection();
@@ -71,6 +80,36 @@ class Program
     public function getId(): ?int
     {
         return $this->id;
+    }
+
+    /**
+     * @param DatetimeInterface|null $updatedAt
+     */
+    public function setUpdatedAt(?DatetimeInterface $updatedAt): void
+    {
+        $this->updatedAt = $updatedAt;
+    }
+
+    /**
+     * @return DatetimeInterface|null
+     */
+    public function getUpdatedAt(): ?DatetimeInterface
+    {
+        return $this->updatedAt;
+    }
+
+    public function setPosterFile(File $image = null): Program
+    {
+        $this->posterFile = $image;
+        if ($image) {
+            $this->updatedAt = new DateTimeImmutable();
+        }
+        return $this;
+    }
+
+    public function getPosterFile(): ?File
+    {
+        return $this->posterFile;
     }
 
     public function getTitle(): ?string
