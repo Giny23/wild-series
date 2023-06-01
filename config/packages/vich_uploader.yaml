@@ -6,5 +6,9 @@ vich_uploader:
     mappings:
         poster_file:
             uri_prefix: /upload/images/posters
-            upload_destination: '%upload_directory%'
+            upload_destination: '%upload_directory1%'
+            namer: Vich\UploaderBundle\Naming\SmartUniqueNamer
+        actor_file:
+            uri_prefix: /upload/images/actors
+            upload_destination: '%upload_directory2%'
             namer: Vich\UploaderBundle\Naming\SmartUniqueNamer

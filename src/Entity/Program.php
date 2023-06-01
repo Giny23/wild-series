@@ -10,6 +10,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Validator\Constraints as Assert;
 use Vich\UploaderBundle\Mapping\Annotation as Vich;
+use Symfony\Component\HttpFoundation\File\File;
 
 
 #[ORM\Entity(repositoryClass: ProgramRepository::class)]
@@ -47,6 +48,10 @@ class Program
     private ?string $poster = null;
 
     #[Vich\UploadableField(mapping: 'poster_file', fileNameProperty: 'poster')]
+    #[Assert\File(
+        maxSize: '1M',
+        mimeTypes: ['image/jpeg', 'image/png', 'image/webp'],
+    )]
     private ?File $posterFile = null;
 
     #[ORM\ManyToOne(inversedBy:'programs')]
@@ -69,7 +74,7 @@ class Program
     private ?string $slug = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
-    private ?DatetimeInterface $updatedAt = null;
+    private ?\DateTimeInterface $updatedAt = null;
 
     public function __construct()
     {
@@ -83,17 +88,17 @@ class Program
     }
 
     /**
-     * @param DatetimeInterface|null $updatedAt
+     * @param \DateTimeInterface|null $updatedAt
      */
-    public function setUpdatedAt(?DatetimeInterface $updatedAt): void
+    public function setUpdatedAt(?\DateTimeInterface $updatedAt): void
     {
         $this->updatedAt = $updatedAt;
     }
 
     /**
-     * @return DatetimeInterface|null
+     * @return \DateTimeInterface|null
      */
-    public function getUpdatedAt(): ?DatetimeInterface
+    public function getUpdatedAt(): ?\DateTimeInterface
     {
         return $this->updatedAt;
     }
@@ -102,7 +107,7 @@ class Program
     {
         $this->posterFile = $image;
         if ($image) {
-            $this->updatedAt = new DateTimeImmutable();
+            $this->updatedAt = new \DateTimeImmutable();
         }
         return $this;
     }

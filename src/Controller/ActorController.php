@@ -4,7 +4,13 @@ namespace App\Controller;
 
 use App\Entity\Actor;
 use App\Entity\Episode;
+use App\Entity\Season;
+use App\Form\ActorType;
+use App\Form\SeasonType;
+use App\Repository\ActorRepository;
+use App\Repository\SeasonRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -18,11 +24,23 @@ class ActorController extends AbstractController
             'controller_name' => 'ActorController',
         ]);
     }
-    #[Route('/{id}', name: 'show', methods: ['GET'])]
-    public function show(Actor $actor): Response
+    #[Route('/new', name: 'new', methods: ['GET', 'POST'])]
+    public function new(Request $request, ActorRepository $actorRepository): Response
     {
-        return $this->render('actor/show.html.twig', [
+        $actor = new Actor();
+        $form = $this->createForm(ActorType::class, $actor);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $actorRepository->save($actor, true);
+            $this->addFlash('success', 'Nouvel(le) acteur(rice) ajouté(e)');
+
+            return $this->redirectToRoute('actor_index', [], Response::HTTP_SEE_OTHER);
+        }
+
+        return $this->renderForm('actor/new.html.twig', [
             'actor' => $actor,
+            'form' => $form,
         ]);
     }
 }

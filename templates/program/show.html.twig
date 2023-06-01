@@ -3,7 +3,11 @@
 
 {% block body %}
     <div class="media">
-        <img class="align-self-start mr-3" src="{{ asset('build/images/' ~ program.poster ~ '.jpg') }}" alt="{{ program.title }} poster">
+        {% if vich_uploader_asset(program) %}
+            <img class="align-self-start mr-3" src="{{ vich_uploader_asset(program) }}" alt="{{ program.title }} poster">
+        {% else %}
+            <img class="align-self-start mr-3" src="{{ asset('build/images/' ~ program.poster ~ '.jpg') }}" alt="{{ program.title }} poster">
+        {% endif %}
         <div class="media-body">
             <h1 class="mt-0">{{ program.title }}</h1>
             <p>{{ program.synopsis }}</p>
@@ -17,7 +21,8 @@
                 <p>Aucune saison disponible</p>
             {% endfor %}
             {% for actor in program.actors %}
-                <a href="{{ path('actor_show', { 'id': actor.id }) }}">Acteur / Actrice : {{ actor.name }}</a>
+                <p>Acteur / Actrice : {{ actor.name }}</p>
+                <img class="align-self-start mr-3" src="{{ vich_uploader_asset(actor) }}" alt="{{ actor.name }} poster">
                 <br>
             {% else %}
                 <p>Aucun acteur disponible</p>
