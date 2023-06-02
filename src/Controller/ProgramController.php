@@ -2,10 +2,14 @@
 
 namespace App\Controller;
 
+use App\Entity\Comment;
 use App\Entity\Program;
 use App\Entity\Season;
 use App\Entity\Episode;
+use App\Entity\User;
+use App\Form\CommentType;
 use App\Form\ProgramType;
+use App\Repository\CommentRepository;
 use App\Service\ProgramDuration;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -81,11 +85,25 @@ class ProgramController extends AbstractController
         ]);
     }
 
-    #[Route('/{program<\d+>}/season/{season<\d+>}/episode/{episode<\d+>}', methods: ['GET'], name: 'showEpisode')]
-    public function showEpisode(Program $program, Season $season, Episode $episode, ProgramDuration $duration) : Response
+    #[Route('/{program<\d+>}/season/{season<\d+>}/episode/{episode<\d+>}', methods: ['GET', 'POST'], name: 'showEpisode')]
+    public function showEpisode(Program $program, Season $season, Episode $episode, ProgramDuration $duration, Request $request, CommentRepository $commentRepository) : Response
     {
+        $comment = new Comment();
+        $form = $this->createForm(CommentType::class, $comment);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $comment->setAuthor($this->getUser());
+            $comment->setEpisode($episode);
+            $commentRepository->save($comment, true);
+        }
         return $this->render('program/episode_show.html.twig', [
-            'program' => $program, 'season' => $season, 'episode' => $episode, 'duration' => $duration->calculate($program)
+            'program' => $program,
+            'season' => $season,
+            'episode' => $episode,
+            'duration' => $duration->calculate($program),
+            'comments' => $commentRepository->findBy(['episode' => $episode]),
+            'form' => $form,
         ]);
     }
 

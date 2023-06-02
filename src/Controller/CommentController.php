@@ -4,7 +4,6 @@ namespace App\Controller;
 
 use App\Entity\Comment;
 use App\Entity\Episode;
-use App\Entity\User;
 use App\Form\CommentType;
 use App\Repository\CommentRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -24,7 +23,7 @@ class CommentController extends AbstractController
     }
 
     #[Route('/new', name: 'new', methods: ['GET', 'POST'])]
-    public function new(Request $request, CommentRepository $commentRepository, Episode $episode, User $user): Response
+    public function new(Request $request, CommentRepository $commentRepository, Episode $episode): Response
     {
         $comment = new Comment();
         $form = $this->createForm(CommentType::class, $comment);
