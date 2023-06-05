@@ -27,6 +27,9 @@
                     <a href="{{ path('comment_edit', {'id': comment.id}) }}">edit</a>
                     <a href="{{ path('comment_delete', {'id': comment.id}) }}">delete</a>
                 {% endif %}
+            {%  if is_granted('ROLE_ADMIN') %}
+                <a href="{{ path('comment_delete', {'id': comment.id}) }}">delete</a>
+            {% endif %}
         {% endfor %}
         <a href="{{ path('episode_show', {'slug': episode.slug}) }}">show</a>
         <a href="{{ path('episode_edit', {'slug': episode.slug}) }}">edit</a>
