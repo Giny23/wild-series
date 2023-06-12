@@ -22,13 +22,19 @@
         {% for comment in comments %}
         <p>{{ comment.comment }}</p>
         <p>{{ comment.rate }}</p>
-        <p>{{ comment.author.id }}</p>
+        <p>{{ comment.author.email }}</p>
                 {% if comment.author.id == app.user.id %}
                     <a href="{{ path('comment_edit', {'id': comment.id}) }}">edit</a>
-                    <a href="{{ path('comment_delete', {'id': comment.id}) }}">delete</a>
+                    <form method="post" action="{{ path('comment_delete', {'id': comment.id}) }}" onsubmit="return confirm('Are you sure you want to delete this item?');">
+                        <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ comment.id) }}">
+                        <button class="btn">Delete</button>
+                    </form>
                 {% endif %}
             {%  if is_granted('ROLE_ADMIN') %}
-                <a href="{{ path('comment_delete', {'id': comment.id}) }}">delete</a>
+                <form method="post" action="{{ path('comment_delete', {'id': comment.id}) }}" onsubmit="return confirm('Are you sure you want to delete this item?');">
+                    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ comment.id) }}">
+                    <button class="btn">Delete</button>
+                </form>
             {% endif %}
         {% endfor %}
         <a href="{{ path('episode_show', {'slug': episode.slug}) }}">show</a>

@@ -4,6 +4,8 @@ namespace App\Controller;
 
 use App\Entity\Comment;
 use App\Entity\Episode;
+use App\Entity\Program;
+use App\Entity\Season;
 use App\Form\CommentType;
 use App\Repository\CommentRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -43,14 +45,6 @@ class CommentController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}', name: 'show', methods: ['GET'])]
-    public function show(Comment $comment): Response
-    {
-        return $this->render('comment/show.html.twig', [
-            'comment' => $comment,
-        ]);
-    }
-
     #[Route('/{id}/edit', name: 'edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, Comment $comment, CommentRepository $commentRepository): Response
     {
@@ -60,7 +54,7 @@ class CommentController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $commentRepository->save($comment, true);
 
-            return $this->redirectToRoute('comment_index', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('program_index', [], Response::HTTP_SEE_OTHER);
         }
 
         return $this->renderForm('comment/edit.html.twig', [
@@ -69,13 +63,14 @@ class CommentController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}', name: 'delete', methods: ['POST'])]
+    #[Route('/{id}', name: 'delete', methods: ['POST', 'GET'])]
     public function delete(Request $request, Comment $comment, CommentRepository $commentRepository): Response
     {
         if ($this->isCsrfTokenValid('delete'.$comment->getId(), $request->request->get('_token'))) {
             $commentRepository->remove($comment, true);
+            $this->addFlash('danger', "Le commentaire a bien été supprimé");
         }
 
-        return $this->redirectToRoute('comment_index', [], Response::HTTP_SEE_OTHER);
+        return $this->redirectToRoute('program_index', [], Response::HTTP_SEE_OTHER);
     }
 }
